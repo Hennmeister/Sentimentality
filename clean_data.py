@@ -6,7 +6,8 @@ import re
 import string
 from config import NUM_TWEETS
 
-allowed_word_types = ["J", "R", "V", "N"]
+allowed_word_types = ["J", "R"]
+# allowed_word_types = ["J", "R", "V", "N"]
 
 def prepare_data():
     with open('Data/Tweets/TwitterSentimentData.csv', encoding="ISO-8859-1") as input_file:

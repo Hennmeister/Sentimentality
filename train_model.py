@@ -14,7 +14,7 @@ import pickle
 def train_classifier():
     vectorizer = CountVectorizer(analyzer="word", \
                                  max_df = 0.9, \
-                                 min_df = 2, \
+                                 min_df = 3, \
                                  # max_features=5000,
                                  )
 
