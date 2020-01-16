@@ -1,73 +1,56 @@
 # SentimentAnalysis
-featureset:  308.25088715553284
-shuffling and splicing 0.9977674484253
-Training NB:  67.19093823432922
+A ensemble voting classifier to detect sentiment in short social media texts.
+This model is intended to be used to produce sentiment scores as a feature for
+another machine-learning project with the end goal to predict the number of
+upvotes a reddit post will get.
 
+Due to the lack of labelled reddit data, this model was trained on a twitter dataset
+available here: http://help.sentiment140.com/for-students
 
-30,000 Testing Tweets:
-Agg_model:
-    aggregate accuracy:  0.7233666666666667
-    Confidence:  0.8984428571427412
-
-    75% with twitter feature list (on 1000 tweets)
-    .75.4% (1000 tweets) 75.4939% (15000 tweets) deemed not neutral by VADER
-Vader:
-    0.5219333333333334 (neutrals making it a lot worse, also should split sentence)
-    0.71, 0.7069 on neutrals - DAMN
-
-
-Plans:
--Label reddit data
--test to see how vader does
--test agg model, leaving ones labelled neutral
--test vader on ability to detect neutral (classify only neutrals)
-
-If vader is better at all, use that
-Otherwise, could use vader to sort out neutrals and then use combination
-
-IF decide to just label pos -> T or F and neg -> T or F:
-    -Build model that optimizes Threshold point for vader sentiments (pos neg and neutral)
-    for when to deem something too mild
-    -In that case, use agg_model to predict
-    -Test if on the non-neutrals, agg_model performs better than vader
-    -Want to be as context-specific as possible, so use self-labelled reddit data
+Model Success (with current parameters):
 
 
 
-REAL PLAN:
 
 
-POS-tagging
-Negation-Prefixing
-https://kenbenoit.net/pdfs/NDATAD2013/Rice-Zorn-LSE-V01.pdf
+Design:
+    A Bag of Words approach was taken to represent the corpus as features. The
+    data was first cleaned by removing punctuation, capitilization and all
+    (NLTK) stopwords. Then, Part of Speech tagging was applied to the remaining
+    words and only adjectives, adverbs, and verbs were left and converted back
+    into a string.
 
-1) Use various popular base classifiers:
-    Multinomial Naive Bayes
-    Bernoulli Naive bayes
-    Logistic Regression
-    SVM
-    Random Forest
+    Next, sklearn's CountVectorizer was used to create a BOW volcabulary and vectorize
+    remaining features. In order to account for negation, both unigram and bigrams were used.
 
+    Before traning, two methods of feature extraction were applied:
+
+    1) Chi2 test was done to determine features not strongly associated with either class
+    (pos or neg).
+
+    2) Sklearn's TfidfTransformer was used to scale down the importance of features
+    that appear frequently in the corpus and are thus likely less informative
+
+    Finally, the actual model used was a voting classifier consisting of 5 base classifiers:
+        1) Multinomial Naive Bayes
+        2) Bernoulli Naive bayes
+        3) Logistic Regression
+        4) SVM
+        5) Random Forest
+    These classifers are among the most popular for sentiment analysis, as per the following
+    literature:
     http://ceur-ws.org/Vol-2145/p26.pdf
     https://www.sciencedirect.com/science/article/pii/S0167923614001997
     https://pdfs.semanticscholar.org/aa3d/afab5bd4112b3f55929582bfec48139ff4c3.pdf
-    https://www.researchgate.net/publication/268509189_Sentiment_Mining_of_Movie_Reviews_using_Random_Forest_with_Tuned_Hyperparameters
 
-2) Train Ensemble.VotingClassifier on Twitter Data
+    These base classifiers each predict the class, and also give a confidence
+    (probability) score. The classifier averages the probabilities of each classifer and
+    determines an overall prediction.
 
-3) Test it on reddit data
+    There are two major next steps for this project:
 
-4) Decide neutral cutoff / Combine with vader for cutoff
-
-Pipeline:
- manually
-    remove punctuation and stopwords w/ nltk
-    POS tagging - J R and V
-    Stopwords
- sklearn
-   CountVectorizer (5, .8) --> chi2 --> TfidfTransformer --> Ensemble
-   Confusion matrix, classification report
-   pickle dat
-
-Use only adjective and adverb
-https://link.springer.com/chapter/10.1007/978-3-030-04284-4_13
+        1) Testing the classifier on labelled data
+           from other domains (specifically, other social media sites) to test how
+           well the model classifies sentiment outside of the twitter domain
+        2)  Determining cutoffs in the confidence score to predict neutal /
+            conflicting sentiments
