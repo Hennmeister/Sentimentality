@@ -6,16 +6,16 @@ An ensemble classifier designed to detect the sentiment of short social media te
 ## Model Success (with current parameters):
 >Trained on ~450,000  and tested on ~50,000 tweets, both with a 50/50 sentiment split.
 
-Score: 78.12 %
+### Score: 78.12 %
 
-Confusion Matrix:
+### Confusion Matrix:
 
 |        |   pos  |  neg  |
 |:-----: | :-----:| :-----|
 |   pos  |220532  | 5689  |
 |   neg  | 5935   | 21159 |
 
-Classification Report:
+### Classification Report:
 
 |                | Precision      | Recall         | f1-score      |    Support     |
 | :-------------:|:-------------: |:-------------:| :-------------:| :-------------:|
@@ -33,6 +33,7 @@ Classification Report:
 ## Design:
 Due to the lack of labelled reddit data, this model was trained on a twitter dataset
 available here: http://help.sentiment140.com/for-students
+
 A Bag of Words approach was taken to represent the corpus as features. The
 data was first cleaned by removing punctuation, capitilization and all
 (NLTK) stopwords. Then, Part of Speech tagging was applied to the remaining
@@ -63,7 +64,7 @@ These base classifiers each predict the class, and also give a confidence
 (probability) score. The classifier averages the probabilities of each classifer and
 determines an overall prediction.
 
-There are two major next steps for this project:
+## Next Steps
 1) Testing the classifier on labelled data
        from other domains (specifically, other social media sites) to test how
        well the model classifies sentiment outside of the twitter domain
