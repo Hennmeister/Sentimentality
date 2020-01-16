@@ -4,8 +4,23 @@ An ensemble classifier designed to detect the sentiment of short social media te
 
 
 ## Model Success (with current parameters):
+Trained on 450,000 tweets with a 50/50 sentiment split. Tested with 50,000.
 
+Score 0.7819750539247866 %
 
+Confusion Matrix:
+[[20532  5689]
+ [ 5935 21159]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.78      0.78      0.78     26467
+           1       0.78      0.79      0.78     26848
+
+    accuracy                           0.78     53315
+   macro avg       0.78      0.78      0.78     53315
+weighted avg       0.78      0.78      0.78     53315
 
 
 
