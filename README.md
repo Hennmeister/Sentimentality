@@ -1,11 +1,7 @@
 # SentimentAnalysis
-A ensemble voting classifier to detect sentiment in short social media texts.
-This model is intended to be used to produce sentiment scores as a feature for
-another machine-learning project with the end goal to predict the number of
-upvotes a reddit post will get.
+An ensemble classifier designed to detect the sentiment of short social media texts.
 
-Due to the lack of labelled reddit data, this model was trained on a twitter dataset
-available here: http://help.sentiment140.com/for-students
+
 
 ## Model Success (with current parameters):
 
@@ -14,6 +10,8 @@ available here: http://help.sentiment140.com/for-students
 
 
 ## Design:
+Due to the lack of labelled reddit data, this model was trained on a twitter dataset
+available here: http://help.sentiment140.com/for-students
 A Bag of Words approach was taken to represent the corpus as features. The
 data was first cleaned by removing punctuation, capitilization and all
 (NLTK) stopwords. Then, Part of Speech tagging was applied to the remaining
@@ -32,25 +30,21 @@ Before traning, two methods of feature extraction were applied:
 that appear frequently in the corpus and are thus likely less informative
 
 Finally, the actual model used was a voting classifier consisting of 5 base classifiers:
-    1) Multinomial Naive Bayes
-    2) Bernoulli Naive bayes
-    3) Logistic Regression
-    4) SVM
-    5) Random Forest
+Multinomial Naive Bayes, Bernoulli Naive Bayes, Logistic Regression, SVM, Random Forest.
+
 These classifers are among the most popular for sentiment analysis, as per the following
 literature:
-http://ceur-ws.org/Vol-2145/p26.pdf
-https://www.sciencedirect.com/science/article/pii/S0167923614001997
-https://pdfs.semanticscholar.org/aa3d/afab5bd4112b3f55929582bfec48139ff4c3.pdf
+1) http://ceur-ws.org/Vol-2145/p26.pdf
+2) https://www.sciencedirect.com/science/article/pii/S0167923614001997
+3) https://pdfs.semanticscholar.org/aa3d/afab5bd4112b3f55929582bfec48139ff4c3.pdf
 
 These base classifiers each predict the class, and also give a confidence
 (probability) score. The classifier averages the probabilities of each classifer and
 determines an overall prediction.
 
 There are two major next steps for this project:
-
-    1) Testing the classifier on labelled data
+1) Testing the classifier on labelled data
        from other domains (specifically, other social media sites) to test how
        well the model classifies sentiment outside of the twitter domain
-    2)  Determining cutoffs in the confidence score to predict neutal /
+2)  Determining cutoffs in the confidence score to predict neutal /
         conflicting sentiments
