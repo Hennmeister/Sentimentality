@@ -1,34 +1,39 @@
 # SentimentAnalysis
 An ensemble classifier designed to detect the sentiment of short social media texts.
-
+Built to use sentiment score as a feature for a model that predicts the number of upvotes a reddit post
+will receive: https://github.com/Hennmeister/FreeGold
 
 
 ## Model Success (with current parameters):
->Trained on ~450,000  and tested on ~50,000 tweets, both with a 50/50 sentiment split.
+>Training set consisted of ~1.3 million documents, with testing set of ~150,000 tweets. Both classes were evenly represented.
 
-### Accuracy: 78.12 %
+### Accuracy : 79.55 %
 
 ### Confusion Matrix:
 
 |        |   pos  |  neg  |
 |:-----: | :-----:| :-----|
-|   pos  |220532  | 5689  |
-|   neg  | 5935   | 21159 |
+|   pos  |62317  | 14948  |
+|   neg  | 17765   | 65915 |
 
 ### Classification Report:
 
 |                | Precision      | Recall         | f1-score      |    Support     |
 | :-------------:|:-------------: |:-------------:| :-------------:| :-------------:|
-| neg            |      0.78      |        0.78     |      0.78    |    26567      |
-| pos            |      0.78      |        0.79     |      0.78    |    26848      |
+| neg            |      0.81      |        0.78     |      0.79    |    80082      |
+| pos            |      0.79      |        0.81     |      0.80    |    79863      |
 |                 |                |               |               |               |
-| accuracy       |                  |            |      0.78    |    53315      |
-| macro avg      |      0.78      |        0.78     |      0.78    |    53315      |
-| weighted avg   |      0.78      |        0.78     |      0.78    |    53315      |
+| accuracy       |                  |            |      0.80    |    159945      |
+| macro avg      |      0.80      |        0.80     |      0.80    |    159945      |
+| weighted avg   |      0.80      |        0.80     |      0.80    |    159945      |
 
-
-
-
+## Scores on Other Domains
+As the model is being used for reddit text, it is important to assess how well the classifier
+performs on domains other than twitter. Early testing of 250 self-labelled r/AskReddit posts
+has found a score of:
+1) 70.33% on posts deemed not neutral
+2) 65.17% on all posts
+Of course, a larger testing dataset is required
 
 ## Design:
 Due to the lack of labelled reddit data, this model was trained on a twitter dataset
