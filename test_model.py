@@ -17,12 +17,16 @@ def get_labelled_posts(neu: bool) -> (list, list):
         return data_x, data_y
 
 if __name__ == '__main__':
-    data_x, data_y = get_labelled_posts(False)
-    import time
-    start = time.time()
-    classifier = pickle.load(open("sentiment_classifier.pickle", "rb"))
-    print(time.time() - start)
-    for x in data_x:
-        print(x, classifier.predict_proba([x]))
-   # print(classifier.score(data_x, data_y))
-   # print(classifier.predict_proba(["Hitler"]))
+    # data_x, data_y = get_labelled_posts(False)
+    import pandas as pd
+    #classifier = pickle.load(open("sentiment_classifier.pickle", "rb"))
+    df = pd.read_json('dab.json', orient="split")
+    # sentiments = classifier.predict_proba(df['Title'])
+    # pos_sent = []
+    # print("here")
+    # for x in sentiments:
+    #     pos_sent = x[1]
+    # df["sentiement"] = pos_sent
+    df['Contains Reddit'] = df['Title'].str.contains('reddit', case=False).astype(int)
+    with open('dab1.json', 'w') as f:
+        f.write(df.to_json(orient='split'))

@@ -13,7 +13,6 @@ from sklearn.pipeline import Pipeline
 from clean_data import prepare_data
 import pickle
 
-
 def pickle_clf(clf, data_x, data_y):
     pickle.dump(clf, open("sentiment_classifier.pickle", 'wb'))
     pickle.dump(data_x, open("Data/Test/data_x", 'wb'))
@@ -27,7 +26,7 @@ def train_classifier():
     with open('Data/Tweets/cleaned_negTweetsNouns', encoding="ISO-8859-1",
               mode='r') as output_neg:
         line = output_neg.readline().rstrip()
-        while line:
+        while line and num_neg < 4000:
             data_x.append(line)
             data_y.append(0)
             line = output_neg.readline()
@@ -35,7 +34,7 @@ def train_classifier():
     with open('Data/Tweets/cleaned_posTweetsNouns', mode='r',
               encoding="ISO-8859-1") as output_pos:
         line = output_pos.readline()
-        while line:
+        while line and num_pos < 4000:
             data_x.append(line)
             data_y.append(1)
             line = output_pos.readline()
@@ -53,21 +52,34 @@ def train_classifier():
                                  ngram_range=(1, 2),
                                #  max_features=50000,
                                  )
-    select_k_best_clf = SelectKBest(chi2, k=75000)\
 
-    ensemble_classifier = VotingClassifier(
+    print("Done Vectorizing")
+    # select_k_best_clf = SelectKBest(chi2, k=75000)\
+    select_k_best_clf = SelectKBest(chi2, k=2000)
+    print("Done feature selection")
+
+    from trinary_voting_classifier import TrinaryVotingClassifier
+    ensemble_classifier = TrinaryVotingClassifier(
         [('lsvc', CalibratedClassifierCV(LinearSVC())),
          ('mnb', MultinomialNB()),
          ('r', RandomForestClassifier(n_estimators=100)),
          ('lgrg', LogisticRegressionCV(random_state=1, max_iter=50000)),
          ('bnb', BernoulliNB())], voting='soft')
 
+    # ensemble_classifier = VotingClassifier(
+    #     [('lsvc', CalibratedClassifierCV(LinearSVC())),
+    #      ('mnb', MultinomialNB()),
+    #      ('r', RandomForestClassifier(n_estimators=100)),
+    #      ('lgrg', LogisticRegressionCV(random_state=1, max_iter=50000)),
+    #      ('bnb', BernoulliNB())], voting='soft')
 
     steps = [('vectorizer', vectorizer), ('select', select_k_best_clf), ('clf', ensemble_classifier)]
     classifier_pipeline = Pipeline(steps)
 
     classifier_pipeline = classifier_pipeline.fit(data_x_train, data_y_train)
     print('clf score', classifier_pipeline.score(data_x_test, data_y_test))
+
+    print("Done training classifier")
 
     y_predicted = classifier_pipeline.predict(data_x_test)
 
@@ -77,9 +89,9 @@ def train_classifier():
     from sklearn.metrics import classification_report
     print(classification_report(data_y_test, y_predicted))
 
-    pickle_clf(classifier_pipeline, data_x_test, data_y_test)
+    # pickle_clf(classifier_pipeline, data_x_test, data_y_test)
 
 if __name__ == '__main__':
-    prepare_data()
+    # prepare_data()
     train_classifier()
 

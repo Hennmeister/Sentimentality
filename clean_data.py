@@ -6,28 +6,25 @@ import re
 import string
 from config import NUM_TWEETS
 
-allowed_word_types = ["J", "R"]
-# allowed_word_types = ["J", "R", "V", "N"]
+# allowed_word_types = ["J", "R", "V"]
+allowed_word_types = ["J", "R", "V", "N"]
 
 def prepare_data():
     with open('Data/Tweets/TwitterSentimentData.csv', encoding="ISO-8859-1") as input_file:
-        with open('Data/Tweets/cleaned_negTweets', 'w') as output_neg:
-            with open('Data/Tweets/cleaned_posTweets', 'w') as output_pos:
+        with open('Data/Tweets/cleaned_negTweetsNouns', 'w') as output_neg:
+            with open('Data/Tweets/cleaned_posTweetsNouns', 'w') as output_pos:
                 data = csv.reader(input_file)
-                third_i = 0
                 neg_i = 0
                 pos_i = 0
                 for tweet_info in data:
-                    if third_i % 3 == 0:
-                        tweet = clean_tweet(tweet_info[5])
-                        if tweet:
-                            if tweet_info[0] == '0' and neg_i < NUM_TWEETS//2:
-                                output_neg.write(tweet + '\n')
-                                neg_i += 1
-                            elif tweet_info[0] == '4' and pos_i < NUM_TWEETS//2:
-                                output_pos.writelines(tweet + '\n')
-                                pos_i += 1
-                    third_i += 1
+                    tweet = clean_tweet(tweet_info[5])
+                    if tweet:
+                        if tweet_info[0] == '0':
+                            output_neg.write(tweet + '\n')
+                            neg_i += 1
+                        elif tweet_info[0] == '4':
+                            output_pos.writelines(tweet + '\n')
+                            pos_i += 1
 
 def clean_tweet(tweet) -> str:
     # Remove punctuation and words that start with given punctuation
